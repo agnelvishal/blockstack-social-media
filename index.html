@@ -38,7 +38,7 @@
             <div id="entry1" class="">
                 <h6 class="qn">Do you know why the F word and G word company sell data?</h6>
                 <h6 class="ans"> Because the data is owned by those corporates and not the user. Check our Twitter like
-                    platform but based on Algorand Blockchain </h6>
+                    platform but based on Blockstack! </h6>
             </div>
 
         </div>
@@ -50,7 +50,7 @@
     <div id="modal2" class="modal card-panel deep-orange accent-2">
         <div class="modal-content">
             <h6> You need to install the Alogarand Chrome Extension from <a
-                    href="https://chrome.google.com/webstore/detail/algosigner/kmmolakhbgdlpkjkcjkebenjheonagdm"> this
+                    href="https://www.blockstack.org/install"> this
                     link</a> and create an account in that extension and then refresh this page to experience the new
                 world.
             </h6>
@@ -62,7 +62,7 @@
     <!-- header -->
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Algo Social Media</a>
+            <a href="#" class="brand-logo">Blockstack Social Media</a>
         </div>
     </nav>
 
@@ -78,7 +78,7 @@
                 </div>
                 <div class="input-field col s3 m2">
                     <input id="algoA" type="number" class="validate" value=1 step=0.1>
-                    <label for="algoA">Algo to send</label>
+                    <label for="algoA">STX to send</label>
                 </div>
                 <div style="margin: 0 1% 0 1%" class="col s3 m2">
                     <button class="btn waves-effect waves-light" type="submit" name="action">Submit
@@ -125,34 +125,7 @@
     <!-- algorand sign transaction -->
     <script>
         async function sendMsg() {
-            accounts = await AlgoSigner.accounts({
-                ledger: 'MainNet'
-            })
-            txParams = await AlgoSigner.algod({
-                ledger: 'MainNet',
-                path: '/v2/transactions/params',
-            });
-            amount = Number(document.querySelector("#algoA").value)
-            let txn = {
-                from: accounts[0].address,
-                to: 'GVZFXMO3QO5JMLQGQCYZG7SOWHZJ47BYUWXA6WDZOVJPFKX2M46X5C2YEU',
-                fee: txParams['min-fee'],
-                type: 'pay',
-                amount: amount * 1000000,
-                firstRound: txParams['last-round'],
-                lastRound: txParams['last-round'] + 1000,
-                genesisID: txParams['genesis-id'],
-                genesisHash: txParams['genesis-hash'],
-                note: document.querySelector("#messageToB").value,
-            };
 
-            signedTx = await AlgoSigner.sign(txn);
-
-            statusAv = await AlgoSigner.send({
-                ledger: 'MainNet',
-                tx: signedTx.blob,
-            });
-            console.log(statusAv)
             location.reload();
 
             // await setData()
@@ -164,43 +137,13 @@
     <script>
 
         async function ready() {
-            try {
-                d = await AlgoSigner.connect()
 
-
-                console.log(JSON.stringify(d));
-                setData()
-            }
-            catch (e) {
-                console.error("Algo signer is not installed");
-
-                var elems = document.querySelector('#modal2');
-                options = { dismissible: false }
-                var instances = M.Modal.init(elems, options);
-                var instance1 = M.Modal.getInstance(elems);
-                instance1.open()
-            }
         }
 
         // Fetch and set data
 
         async function fetchData() {
-            algoResponse = await AlgoSigner.indexer({
-                ledger: 'MainNet',
-                path: '/v2/accounts/GVZFXMO3QO5JMLQGQCYZG7SOWHZJ47BYUWXA6WDZOVJPFKX2M46X5C2YEU/transactions',
-            });
 
-            function getData(value, index, array) {
-                try {
-                    note = window.atob(value.note);
-                    return { note: note, amount: value['payment-transaction'].amount, date: value['round-time'] }
-                }
-                catch{
-                    return {}
-                }
-            }
-            datas = algoResponse.transactions.map(getData);
-            return datas
         }
 
         async function setData() {
@@ -211,7 +154,7 @@
                 var template = document.querySelector('#template');
                 var clone = document.importNode(template.content, true);
                 clone.querySelector(".note").textContent = data.note
-                clone.querySelector(".amount").textContent = Number(data.amount) / 1000000 + " Algo"
+                clone.querySelector(".amount").textContent = Number(data.amount) / 1000000 + " STX"
 
                 var utcSeconds = Number(data.date);
                 var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
